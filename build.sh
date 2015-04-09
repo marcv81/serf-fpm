@@ -1,6 +1,7 @@
 #!/bin/sh
 
 TIMESTAMP=`date +%s`
+TYPES="rpm deb"
 
 # Download sources
 if [ ! -f rootfs/usr/bin/serf ]
@@ -12,12 +13,18 @@ then
 fi
 
 # Delete existing packages
-rm *.rpm -f
+for TYPE in $TYPES
+do
+  rm *."$TYPE" -f
+done
 
 # Create package
-echo "Creating RPM package..."
-fpm -s dir -t rpm -C rootfs -n serf -v 0.6.4 \
---iteration $TIMESTAMP --epoch $TIMESTAMP \
---after-install meta/after-install.sh \
---before-remove meta/before-remove.sh \
---after-remove meta/after-remove.sh
+for TYPE in $TYPES
+do
+  echo "Creating $TYPE package..."
+  fpm -s dir -t $TYPE -C rootfs -n serf -v 0.6.4 \
+  --iteration $TIMESTAMP --epoch $TIMESTAMP \
+  --after-install meta/after-install.sh \
+  --before-remove meta/before-remove.sh \
+  --after-remove meta/after-remove.sh
+done
