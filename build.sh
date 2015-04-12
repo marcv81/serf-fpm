@@ -8,7 +8,8 @@ if [ ! -f rootfs/usr/bin/serf ]
 then
   mkdir -p rootfs/usr/bin
   echo "Downloading sources..."
-  wget -qO- https://dl.bintray.com/mitchellh/serf/0.6.4_linux_amd64.zip | funzip > rootfs/usr/bin/serf
+  URL=https://dl.bintray.com/mitchellh/serf/0.6.4_linux_amd64.zip
+  wget -qO tmp.zip $URL && unzip tmp.zip -d rootfs/usr/bin && rm tmp.zip
   chmod 0755 rootfs/usr/bin/serf
 fi
 
